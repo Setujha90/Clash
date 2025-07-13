@@ -1,5 +1,13 @@
 import {z} from "zod" // Importing zod for schema validation,it helps in defining and validating the structure of data,like user registration details. it is not empty, it is used to ensure that the data meets specific criteria before processing it further.
 
+export const loginSchema = z.object({
+    email: z.string({message: "Email is required."})
+        .email({message: "Email must be a correct "}), 
+        
+    password: z.string({message: "Password is required."}),
+})
+
+
 export const registerSchema = z.object({ 
     name: z.string({message: "Name is required."})
         .min(3, {message: "Name must be at lest 3 characteres long."}),

@@ -1,5 +1,5 @@
 "use server"
-import { REGISTER_URL } from "@/lib/apiEndPoints"
+import { REGISTER_URL , CHECK_CREDENTIALS_URL} from "@/lib/apiEndPoints"
 import axios, { AxiosError } from "axios"
 
  //use server is used for server actions which indicates that this code will run on the server side, allowing access to server-side resources and APIs, this helps to send data to the server and perform actions like database operations, authentication, etc.
@@ -9,6 +9,7 @@ export async function registerAction(prevState: any, formData: FormData){ // Fun
     console.log("Form Data:", formData); 
 
     try {
+        
         const {data} = await axios.post(REGISTER_URL,{ // Sending a POST request to the server to register a new user
             // The formData is used to send the user's registration details
             name: formData.get("name"),
@@ -39,6 +40,48 @@ export async function registerAction(prevState: any, formData: FormData){ // Fun
             status: 500,
             message: "Internal Server Error",
             errors: {}
+        }
+    }
+}
+
+export async function loginAction(prevState: any, formData: FormData){ 
+    console.log("Form Data:", formData); 
+
+    try {
+        
+        const {data} = await axios.post(CHECK_CREDENTIALS_URL,{ 
+            email: formData.get("email"),
+            password: formData.get("password"),
+        
+        })
+        return {
+            status: 200,
+            message: data?.message ?? "Login success",
+            errors: {} ,
+            data: {
+                email: formData.get("email"),
+                password: formData.get("password"),
+            }
+        }
+
+    } catch (error) {
+
+        if(error instanceof AxiosError){ 
+            if(error.response?.status === 422){
+                
+                return {
+                    status: 422,
+                    message: error.response?.data?.message,
+                    errors: error.response?.data?.errors,
+                    data: {}
+                }
+            }
+        }
+        return {
+            status: 500,
+            message: "Internal Server Error",
+            errors: {},
+            data: {}
         }
     }
 }

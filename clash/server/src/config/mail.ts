@@ -13,9 +13,9 @@ auth: {
 
 export const sendEmail = async (to:string, subject:string, body:string ) =>{
     await transporter.sendMail({
-    from: process.env.FROM_EMAIL, // Sender address,
+    from: process.env.FROM_EMAIL, 
     to: to,
     subject: subject,
-    html: body, // HTML body
+    html: body,
 });
 }

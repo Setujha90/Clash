@@ -27,7 +27,7 @@ export default function Register() {  // This component renders a registration f
     },[state])
 
 return (
-    <form action={formAction}> // The form uses the `formAction` function to handle the submission, which is provided by the `useFormState` hook.
+    <form action={formAction}>
                 <div className='mt-4'>
                     <Label htmlFor='name' className='mb-1'>Name</Label>
                     <Input id='name' name='name'type='text' placeholder='Enter your Full Name' />
