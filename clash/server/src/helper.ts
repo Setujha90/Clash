@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import ejs from "ejs";
 import { fileURLToPath } from "url";
 import * as path from "path";
+import moment from "moment";
 
 export const formatZodError = (error: ZodError):any => { // Function to format Zod validation errors.
     // This function takes a ZodError object and formats it into a more readable structure.
@@ -23,3 +24,10 @@ const html = await ejs.renderFile(
 );
 return html;
 };
+
+export const checkDateHourDiff = (date: Date | string): number =>{
+    const now = moment();
+    const tokenSendAt = moment(date);
+    const diffence = moment.duration(now.diff(tokenSendAt));
+    return diffence.asHours();
+}

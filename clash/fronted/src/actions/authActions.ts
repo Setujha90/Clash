@@ -1,5 +1,5 @@
 "use server"
-import { REGISTER_URL , CHECK_CREDENTIALS_URL} from "@/lib/apiEndPoints"
+import { REGISTER_URL , CHECK_CREDENTIALS_URL, FORGOT_PASSWORD_URL, RESET_PASSWORD_URL} from "@/lib/apiEndPoints"
 import axios, { AxiosError } from "axios"
 
  //use server is used for server actions which indicates that this code will run on the server side, allowing access to server-side resources and APIs, this helps to send data to the server and perform actions like database operations, authentication, etc.
@@ -82,6 +82,82 @@ export async function loginAction(prevState: any, formData: FormData){
             message: "Internal Server Error",
             errors: {},
             data: {}
+        }
+    }
+}
+
+export async function forgotpassAction(prevState: any, formData: FormData){ 
+    console.log("Form Data:", formData); 
+
+    try {
+        
+        const {data} = await axios.post(FORGOT_PASSWORD_URL,{ 
+            email: formData.get("email"),
+        
+        })
+        return {
+            status: 200,
+            message: data?.message ?? "Password reset link sent to your email.Please check your email.",
+            errors: {} ,
+        
+        }
+
+    } catch (error) {
+
+        if(error instanceof AxiosError){ 
+            if(error.response?.status === 422){
+                
+                return {
+                    status: 422,
+                    message: error.response?.data?.message,
+                    errors: error.response?.data?.errors,
+                    data: {}
+                }
+            }
+        }
+        return {
+            status: 500,
+            message: "Internal Server Error",
+            errors: {},
+            data: {}
+        }
+    }
+}
+
+export async function resetpassAction(prevState: any, formData: FormData){ 
+    console.log("Form Data:", formData); 
+
+    try {
+        
+        const {data} = await axios.post(RESET_PASSWORD_URL,{  
+            email: formData.get("email"),
+            password: formData.get("password"),
+            confirmpassword: formData.get("confirmpassword"),
+            token: formData.get("token")
+
+        })
+        return {
+            status: 200,
+            message: data?.message ?? "Password reset successfully.Now you can login with your new password.",
+            errors: {} 
+        }
+
+    } catch (error) {
+
+        if(error instanceof AxiosError){ 
+            if(error.response?.status === 422){
+                
+                return {
+                    status: 422,
+                    message: error.response?.data?.message,
+                    errors: error.response?.data?.errors
+                }
+            }
+        }
+        return {
+            status: 500,
+            message: "Internal Server Error",
+            errors: {}
         }
     }
 }

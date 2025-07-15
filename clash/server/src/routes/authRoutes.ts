@@ -10,11 +10,12 @@ import { error } from "console";
 
 import jwt from 'jsonwebtoken'
 import AuthMiddleware from "../middleware/AuthMiddleware.js";
+import { authLimiter } from "../config/rateLimit.js";
 
 const router= Router();
 
 //*Login Route
-router.post('/login', async (req:Request, res:Response) => {
+router.post('/login',authLimiter, async (req:Request, res:Response) => {
     try {
         const body = req.body;
         const payload = loginSchema.parse(body);
@@ -63,7 +64,7 @@ router.post('/login', async (req:Request, res:Response) => {
 })
 
 //*Login Check
-router.post('/check/credentials', async (req:Request, res:Response) => {
+router.post('/check/credentials',authLimiter, async (req:Request, res:Response) => {
     try {
         const body = req.body;
         const payload = loginSchema.parse(body);
@@ -109,7 +110,7 @@ router.post('/check/credentials', async (req:Request, res:Response) => {
 
 
 //*Register Route
-router.post('/register', async (req:Request, res:Response) => { 
+router.post('/register',authLimiter, async (req:Request, res:Response) => { 
     try { 
         const body = req.body; 
         const payload =registerSchema.parse(body); 

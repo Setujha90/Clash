@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function Login() {
     const router = useRouter();
-const initialState = {
+    const initialState = {
     message: "",
     status: 0,
     errors: {},
@@ -26,7 +26,7 @@ const [state, formAction] = useFormState(loginAction, initialState);
             toast.error(state.message)
         }else if(state.status === 200){
             toast.success(state.message);
-            router.push("/dashboard")
+            router.replace("/dashboard")
         };
     
     },[state,router])

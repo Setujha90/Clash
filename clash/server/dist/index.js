@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 import { emailQueue, emailQueueName } from './jobs/EmailJob.js';
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(appLimiter);
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "./views"));
 //**Routes */
@@ -24,6 +25,7 @@ app.get("/", async (req, res) => {
 });
 //**Queues*/
 import "./jobs/index.js";
+import { appLimiter } from './config/rateLimit.js';
 const PORT = process.env.PORT || 7000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
