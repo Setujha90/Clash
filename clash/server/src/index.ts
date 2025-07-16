@@ -4,6 +4,7 @@ const app: Application = express();
 import ejs from 'ejs'; 
 import path from 'path';
 import {fileURLToPath} from "url"; 
+import fileUpload from 'express-fileupload'; // Importing express-fileupload for handling file uploads
 
 import Routes from './routes/index.js'; 
 
@@ -14,6 +15,13 @@ import { emailQueue, emailQueueName } from './jobs/EmailJob.js';
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 app.use(appLimiter)
+
+app.use(fileUpload({ // fileUpload is a middleware for handling file uploads in Express.js applications.
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}));
+
+app.use(express.static("public")); // Serve static files from the public directory, allowing access to files like images, stylesheets, and scripts.
 
 app.set("view engine", "ejs"); 
 app.set("views", path.resolve(__dirname ,"./views")); 

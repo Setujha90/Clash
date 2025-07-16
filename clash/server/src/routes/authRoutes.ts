@@ -134,9 +134,6 @@ router.post('/register',authLimiter, async (req:Request, res:Response) => {
         payload.password = await bcrypt.hash(payload.password, salt);
 
         const token = await bcrypt.hash(uuid4(), salt); // Generate a unique token for the user, e.g., for email verification.
-        const url = `${process.env.APP_URL}/verify/email?email=${payload.email}&token=${token}`; // Construct the verification URL using the app's base URL and the user's email and token.
-        const emailBody = await renderEmailEjs("email-verify", {name: payload.name, url:url}); // Render the email body using the EJS template with the user's name and verification URL.
-        await emailQueue.add("emailQueueName", {to:payload.email, subject: "Verify your email", body: emailBody}); // Add the email to the queue for sending.
 
         await prisma.user.create({ 
             data: {
@@ -147,6 +144,11 @@ router.post('/register',authLimiter, async (req:Request, res:Response) => {
                 
             }
         })
+        const url = `${process.env.APP_URL}/verify/email?email=${payload.email}&token=${token}`; // Construct the verification URL using the app's base URL and the user's email and token.
+        const emailBody = await renderEmailEjs("email-verify", {name: payload.name, url:url}); // Render the email body using the EJS template with the user's name and verification URL.
+        await emailQueue.add("emailQueueName", {to:payload.email, subject: "Verify your email", body: emailBody}); // Add the email to the queue for sending.
+
+        
 
 
 

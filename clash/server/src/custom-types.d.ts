@@ -9,6 +9,7 @@ interface AuthUser {
 declare namespace Express { // Extend the Express namespace to include the custom user property
     interface Request {
         user?: AuthUser; // Optional user property of type AuthUser
+        
     }
 
 }

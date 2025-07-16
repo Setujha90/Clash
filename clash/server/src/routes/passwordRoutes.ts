@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import prisma from "../config/database.js";
-import { forgotpasswordSchema, resetpasswordSchema } from "../validation/passwordValidations.js";
+import { forgotpasswordSchema, resetpasswordSchema } from "../validation/passwordValidations.js"; 
 import { authLimiter } from "../config/rateLimit.js";
 import { formatZodError, renderEmailEjs , checkDateHourDiff } from "../helper.js";
 import { ZodError } from "zod";

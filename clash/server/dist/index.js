@@ -4,6 +4,7 @@ const app = express();
 import ejs from 'ejs';
 import path from 'path';
 import { fileURLToPath } from "url";
+import fileUpload from 'express-fileupload'; // Importing express-fileupload for handling file uploads
 import Routes from './routes/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,6 +12,11 @@ import { emailQueue, emailQueueName } from './jobs/EmailJob.js';
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(appLimiter);
+app.use(fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/'
+}));
+app.use(express.static("public")); // Serve static files from the public directory, allowing access to files like images, stylesheets, and scripts.
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "./views"));
 //**Routes */
