@@ -1,5 +1,5 @@
 "use server"
-import { REGISTER_URL , CHECK_CREDENTIALS_URL, FORGOT_PASSWORD_URL, RESET_PASSWORD_URL} from "@/lib/apiEndPoints"
+import { REGISTER_URL , LOGIN_URL, CHECK_CREDENTIALS_URL, FORGOT_PASSWORD_URL, RESET_PASSWORD_URL} from "@/lib/apiEndPoints"
 import axios, { AxiosError } from "axios"
 
  //use server is used for server actions which indicates that this code will run on the server side, allowing access to server-side resources and APIs, this helps to send data to the server and perform actions like database operations, authentication, etc.
@@ -44,47 +44,82 @@ export async function registerAction(prevState: any, formData: FormData){ // Fun
     }
 }
 
-export async function loginAction(prevState: any, formData: FormData){ 
-    console.log("Form Data:", formData); 
-
-    try {
-        
-        const {data} = await axios.post(CHECK_CREDENTIALS_URL,{ 
-            email: formData.get("email"),
-            password: formData.get("password"),
-        
-        })
+export async function loginAction(prevState: any, formData: FormData) {
+  try {
+    await axios.post(CHECK_CREDENTIALS_URL, {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+    return {
+      status: 200,
+      message: "Credentials matched loging you shortly!",
+      errors: {},
+      data: {
+        email: formData.get("email"),
+        password: formData.get("password"),
+      },
+    };
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      if (error.response?.status === 422) {
         return {
-            status: 200,
-            message: data?.message ?? "Login success",
-            errors: {} ,
-            data: {
-                email: formData.get("email"),
-                password: formData.get("password"),
-            }
-        }
-
-    } catch (error) {
-
-        if(error instanceof AxiosError){ 
-            if(error.response?.status === 422){
-                
-                return {
-                    status: 422,
-                    message: error.response?.data?.message,
-                    errors: error.response?.data?.errors,
-                    data: {}
-                }
-            }
-        }
-        return {
-            status: 500,
-            message: "Internal Server Error",
-            errors: {},
-            data: {}
-        }
+          status: 422,
+          message: error.response?.data?.message,
+          errors: error.response?.data?.errors,
+        };
+      }
     }
+    return {
+      status: 500,
+      message: "Something went wrong.please try again!",
+      errors: {},
+      data: {},
+    };
+  }
 }
+
+// export async function loginAction(prevState: any, formData: FormData){ 
+//     console.log("Form Data:", formData); 
+
+//     try {
+        
+//         const {data} = await axios.post(CHECK_CREDENTIALS_URL,{ 
+//             email: formData.get("email"),
+//             password: formData.get("password"),
+//         })
+//       //  console.log("Login Response Data:", data); // Log the response data for debugging
+//         return {
+//             status: 200,
+//             message: data?.message ?? "Login success",
+//             errors: {} ,
+//             data: {
+//                 email: data?.email ?? formData.get("email"),
+//                 password: data?.password ?? formData.get("password"),
+//             }
+//         }
+
+//     } catch (error) {
+
+//         if(error instanceof AxiosError){ 
+//             if(error.response?.status === 422){
+                
+//                 return {
+//                     status: 422,
+//                     message: error.response?.data?.message,
+//                     errors: error.response?.data?.errors,
+//                     data: {}
+//                 }
+//             }
+//         }
+//         return {
+//             status: 500,
+//             message: "Internal Server Error",
+//             errors: {},
+//             data: {}
+//         }
+//     }
+// }
+
 
 export async function forgotpassAction(prevState: any, formData: FormData){ 
     console.log("Form Data:", formData); 

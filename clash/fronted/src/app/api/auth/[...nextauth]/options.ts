@@ -5,66 +5,66 @@ import Credentials from "next-auth/providers/credentials";
 import { LOGIN_URL } from "@/lib/apiEndPoints";
 
 export type CustomSession = {
-user?: CustomUser;
-expires: ISODateString;
+  user?: CustomUser;
+  expires: ISODateString;
 };
 
 export type CustomUser = {
-id?: string | null;
-name?: string | null;
-email?: string | null;
-    image?: string | null;
-token?: string | null;
+  id?: string | null;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  token?: string | null;
 };
 
 export const authOptions: AuthOptions = {
-pages: {
+  pages: {
     signIn: "/login",
-},
+  },
 
-callbacks: {
+  callbacks: {
     async jwt({ token, user }: { token: JWT; user: CustomUser }) {
-if (user) {
+      if (user) {
         token.user = user;
-    }
-    return token;
+      }
+      return token;
     },
     async session({
-    session,
-        token,
-    user,
+      session,
+      token,
+      user,
     }: {
-    session: CustomSession;
-    token: JWT;
-    user: User;
+      session: CustomSession;
+      token: JWT;
+      user: User;
     }) {
-    session.user = token.user as CustomUser;
-    return session;
+      session.user = token.user as CustomUser;
+      return session;
     },
-},
-providers: [
+  },
+  providers: [
     Credentials({
-    name: "Welcome Back",
-    type: "credentials",
+      name: "Welcome Back",
+      type: "credentials",
 
-    credentials: {
+      credentials: {
         email: {
-        label: "Email",
-        type: "email",
-        placeholder: "Enter your email",
-    },
+          label: "Email",
+          type: "email",
+          placeholder: "Enter your email",
+        },
         password: { label: "Password", type: "password" },
-},
-    async authorize(credentials, req) {
+      },
+      async authorize(credentials, req) {
         const { data } = await axios.post(LOGIN_URL, credentials);
         const user = data?.data;
         if (user) {
-        return user;
+          return user;
         } else {
-        return null;
+          return null;
         }
-    },
+      },
     }),
-    
-],
+    // ...add more providers here
+  ],
 };
