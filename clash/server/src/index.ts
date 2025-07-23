@@ -1,57 +1,52 @@
-import express, { Application, Response, Request } from "express";
+import express, {Application, Request, Response }from 'express';
 import "dotenv/config";
-import cors from "cors";
-import helmet from "helmet";
-import ExpressFileUpoad from "express-fileupload";
-import { createServer, Server as HttpServer } from "http";
-const PORT = process.env.PORT || 7000;
-import * as path from "path";
-import { fileURLToPath } from "url";
-import { Server } from "socket.io";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app: Application = express();
-const server: HttpServer = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-  },
-});
+import ejs from 'ejs'; 
+import path from 'path';
+import {fileURLToPath} from "url"; 
+import fileUpload from 'express-fileupload'; // Importing express-fileupload for handling file uploads
 
-export { io };
+import Routes from './routes/index.js'; 
+import cors from 'cors'; // Importing CORS middleware to enable Cross-Origin Resource Sharing
 
-setupSocket(io);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
 
-// *middleware
-app.use(cors());
-app.use(helmet());
-app.use(
-  ExpressFileUpoad({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
-app.use(express.json());
+import { emailQueue, emailQueueName } from './jobs/EmailJob.js';
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static("public"));
+app.use(appLimiter)
+app.use(cors())
 
-// * Set View engine
-app.set("view engine", "ejs");
-app.set("views", path.resolve(__dirname, "./views"));
+app.use(fileUpload({ // fileUpload is a middleware for handling file uploads in Express.js applications.
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}));
 
-// * Set Queue
-import "./jobs/index.js";
+app.use(express.static("public")); // Serve static files from the public directory, allowing access to files like images, stylesheets, and scripts.
 
-app.get("/", async (req: Request, res: Response) => {
-  const hoursDiff = checkDateHourDifference("2024-07-15T07:36:28.019Z");
+app.set("view engine", "ejs"); 
+app.set("views", path.resolve(__dirname ,"./views")); 
 
-  return res.json({ message: hoursDiff });
+//**Routes */
+app.use(Routes); 
+
+app.get("/", async(req: Request, res: Response) => {
+//res.send("Hello World");
+ const html = await ejs.renderFile(path.resolve(__dirname + "/views/emails/welcome.ejs"), {name: "Setu"}); //render the EJS template with a name variable
+//    await  sendEmail("satorugojo0236sukuna@gmail.com", "Welcome to Clash", html); //send the email using the sendEmail function
+
+await emailQueue.add(emailQueueName, {to:"satorugojo0236sukuna@gmail.com",subject: "Welcome",body:html}) 
+res.json({msg: "Email send successfully"}); 
+
+ //return res.render("emails/welcome",{name: "Setu K. Jha"}); //render the welcome email template with a name variable
 });
 
-// *Routes
-import routes from "./routing/index.js";
-import { checkDateHourDifference } from "./helper.js";
-import { setupSocket } from "./socket.js";
-app.use("/", routes);
+//**Queues*/
+import "./jobs/index.js"; 
+import { appLimiter } from './config/rateLimit.js';
 
-server.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
+const PORT = process.env.PORT || 7000;
+app.listen(PORT, () => {
+console.log(`Server is running on port ${PORT}`);
+});

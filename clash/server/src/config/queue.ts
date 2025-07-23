@@ -1,28 +1,21 @@
-import { ConnectionOptions, DefaultJobOptions } from "bullmq";
-import IORedis from "ioredis";
+import { ConnectionOptions, DefaultJobOptions } from "bullmq"; // Importing ConnectionOptions from bullmq ,used for configuring the connection to the Redis server
 
-// export const redisConnection:ConnectionOptions = {
-//     host: process.env.REDIS_HOST,
-//     port: 6379,
-//     password:process.env.REDIS_PASSWORD,
+export const redisConnection: ConnectionOptions = { // Configuration for connecting to Redis server 
+    host: process.env.REDIS_HOST, // Hostname of the Redis server
+    port: 6379,
+}
 
-//   };
+export const defaultQueueOptions: DefaultJobOptions = { // Default options for jobs in the queue to how long a job can run before it is considered failed,or we need to hold it in the queue 
+    removeOnComplete: {// Remove completed jobs from the queue
+        count: 20, // Number of completed jobs to keep in the queue
+        age: 60 * 60 // 1 hour, // Age of completed jobs to keep in the queue
+    },
+    attempts: 3, // Number of attempts to retry a job if it fails
+    backoff: { // Backoff strategy for retrying failed jobs
+        type: 'exponential', // Exponential backoff
+        delay: 1000 // Initial delay of 1 second
+    },
+    removeOnFail: false, // Do not remove failed jobs from the queue
 
-export const redisConnection: ConnectionOptions = new IORedis.default({
-  host: process.env.REDIS_HOST,
-  port: 6379,
-  maxLoadingRetryTime: null,
-  maxRetriesPerRequest: null,
-});
 
-export const defaultQueueConfig: DefaultJobOptions = {
-  removeOnComplete: {
-    count: 20,
-    age: 60 * 60,
-  },
-  attempts: 3,
-  backoff: {
-    type: "exponential",
-    delay: 1000,
-  },
-};
+}

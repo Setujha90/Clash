@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import {Toaster} from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+import ClientSessionProvider from "./providers/ClientSessionProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = FontSans({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Clashing App",
-  description: "A Clash of Clans inspired app",
+  title: "Clash App",
+  description: "Add your VS to start clashing",
 };
 
 export default function RootLayout({
@@ -24,12 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning  >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(
+          "min-h-screen  font-sans antialiased bg-slate-50",
+          fontSans.variable
+        )}
       >
-        <Toaster richColors position="top-right"/>
-        {children}
+        <ClientSessionProvider>{children}</ClientSessionProvider>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

@@ -1,14 +1,12 @@
-import Env from '@/lib/env';
+import Env from "./env";
 
-export const BASE_URL = `${Env.BACKEND_URL}/api`;
-export const REGISTER_URL = `${BASE_URL}/auth/register`;
+export const BACKEND_URL = Env.BACKEND_URL;
+export const LOGIN_URL = BACKEND_URL + "/api/login";
+export const CHECK_CREDENTIALS_URL = BACKEND_URL + "/api/check/login";
+export const REGISTER_URL = BACKEND_URL + "/api/register";
+export const FORGOT_PASSWORD_URL = BACKEND_URL + "/api/forget-password";
+export const RESET_PASSWORD_URL = BACKEND_URL + "/api/reset-password";
 
-export const LOGIN_URL = `${BASE_URL}/auth/login`;
-export const CHECK_CREDENTIALS_URL = `${BASE_URL}/auth/check/credentials`;
-
-export const FORGOT_PASSWORD_URL = `${BASE_URL}/auth/forgot-password`;
-export const RESET_PASSWORD_URL = `${BASE_URL}/auth/reset-password`;
-
-
-export const CLASH_URL = `${BASE_URL}/clash`;
-
+//  Clash URL
+export const CLASH_URL = BACKEND_URL + "/api/clash";
+export const CLASH_ITEMS_URL = BACKEND_URL + "/api/clash/items";

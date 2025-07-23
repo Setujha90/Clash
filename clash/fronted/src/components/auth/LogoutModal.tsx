@@ -20,7 +20,6 @@ export default function LogoutModal({
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const handleLogout = () => {
-    document.cookie = `token=; path=/; max-age=3600; secure; SameSite=Strict`;
     signOut({ redirect: true, callbackUrl: "/login" });
   };
   return (

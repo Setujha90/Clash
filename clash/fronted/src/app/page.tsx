@@ -1,11 +1,9 @@
-import HeroSection from '@/components/base/HeroSection'
-import { Button } from '@/components/ui/button'
-import React from 'react'
+import HeroSection from "@/components/base/HeroSection";
 
-export default function App() {
+export default function Home() {
   return (
     <div>
       <HeroSection />
     </div>
-  )
+  );
 }

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SubmitButton } from "../common/SubmitBtn";
 import { useFormState } from "react-dom";
-import { loginAction } from "@/actions/authActions";
+import { loginAction } from "@/app/actions/authActions";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
