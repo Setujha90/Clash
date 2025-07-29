@@ -1,18 +1,25 @@
-import nodemailer from 'nodemailer';
-export const transporter = nodemailer.createTransport({
+import nodemailer from "nodemailer";
+import logger from "./logger.js";
+const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com", // SMTP server address
     port: 587,
-    secure: false, //true for 465, false for other ports
+    secure: false,
     auth: {
         user: process.env.FROM_EMAIL,
         pass: process.env.FROM_PASSWORD,
     },
 });
-export const sendEmail = async (to, subject, body) => {
-    await transporter.sendMail({
-        from: process.env.FROM_EMAIL,
-        to: to,
-        subject: subject,
-        html: body,
-    });
+export const sendMail = async (to, subject, html) => {
+    // send mail with defined transport object
+    try {
+        await transporter.sendMail({
+            from: process.env.FROM_EMAIL,
+            to: to, // list of receivers
+            subject: subject,
+            html: html,
+        });
+    }
+    catch (error) {
+        logger.error({ type: "Email Error", error });
+    }
 };

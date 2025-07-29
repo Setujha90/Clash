@@ -1,16 +1,14 @@
-//This file is create to remove the error that is showing in authmiddleware.ts file that req.user is not assignable to type Request, so we are creating a custom type for Request that includes user property.
-
 interface AuthUser {
-    id: Number;
-    email: string;  
-    name: string;
+  id: number;
+  name: string;
+  email: string;
+  google_id: string;
+  image?: string;
+  // Add other relevant user properties here
 }
 
-declare namespace Express { // Extend the Express namespace to include the custom user property
-    interface Request {
-        user?: AuthUser; // Optional user property of type AuthUser
-        
-    }
-
+declare namespace Express {
+  export interface Request {
+    user?: AuthUser; // Optional user property
+  }
 }
-

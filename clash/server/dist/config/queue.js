@@ -1,16 +1,23 @@
 export const redisConnection = {
-    host: process.env.REDIS_HOST, // Hostname of the Redis server
-    port: 6379,
+    host: 'redis-10887.c301.ap-south-1-1.ec2.redns.redis-cloud.com',
+    port: 10887,
+    password: 'yfjBFe8fU3r4OGTP05ewj1wy2PAKhBsd',
+    // If you want to use a URL, you need to create an IORedis instance directly instead of using ConnectionOptions
 };
-export const defaultQueueOptions = {
+// export const redisConnection: ConnectionOptions = new IORedis.default({
+//   host: process.env.REDIS_HOST,
+//   port: 6379,
+//   maxLoadingRetryTime: null,
+//   maxRetriesPerRequest: null,
+// });
+export const defaultQueueConfig = {
     removeOnComplete: {
-        count: 20, // Number of completed jobs to keep in the queue
-        age: 60 * 60 // 1 hour, // Age of completed jobs to keep in the queue
+        count: 20,
+        age: 60 * 60,
     },
-    attempts: 3, // Number of attempts to retry a job if it fails
+    attempts: 3,
     backoff: {
-        type: 'exponential', // Exponential backoff
-        delay: 1000 // Initial delay of 1 second
+        type: "exponential",
+        delay: 1000,
     },
-    removeOnFail: false, // Do not remove failed jobs from the queue
 };
