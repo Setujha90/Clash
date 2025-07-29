@@ -2,9 +2,9 @@ import { ConnectionOptions, DefaultJobOptions } from "bullmq";
 import IORedis from "ioredis";
 
 export const redisConnection: ConnectionOptions = {
-    host: 'redis-10887.c301.ap-south-1-1.ec2.redns.redis-cloud.com',
-    port: 10887,
-    password: 'yfjBFe8fU3r4OGTP05ewj1wy2PAKhBsd',
+    host: process.env.REDIS_HOST ,
+    port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+    password: process.env.REDIS_PASSWORD,
     // If you want to use a URL, you need to create an IORedis instance directly instead of using ConnectionOptions
 };
 
