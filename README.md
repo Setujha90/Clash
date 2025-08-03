@@ -141,7 +141,7 @@ Before running this project, make sure you have:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/Setujha90/clash.git
+git clone https://github.com/Setujha90/Clash.git
 cd clash
 ```
 
