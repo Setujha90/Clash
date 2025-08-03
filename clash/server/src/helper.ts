@@ -50,7 +50,7 @@ export const uploadImage = (image: UploadedFile) => {
     if (err) throw err;
   });
 
-  return imageName;
+  return uploadPath;
 };
 
 export const renderEmailEjs = async (fileName: string, payload: any) => {
@@ -58,9 +58,9 @@ export const renderEmailEjs = async (fileName: string, payload: any) => {
   const html = await ejs.renderFile(
     __dirname + `/views/emails/${fileName}.ejs`,
     payload
-  );
+  );                        
   return html;
-};
+};                                    
 
 export const checkDateHourDifference = (date: Date | string): number => {
   const now = moment();

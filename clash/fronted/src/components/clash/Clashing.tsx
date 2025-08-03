@@ -1,7 +1,6 @@
 "use client";
 import React, { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
-import { getImageUrl } from "@/lib/utils";
 import { Button } from "../ui/button";
 import { ThumbsUp } from "lucide-react";
 import CountUp from "react-countup";
@@ -10,7 +9,10 @@ import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
 
 export default function Clashing({ clash }: { clash: ClashType }) {
-  const [hideVote, setHideVote] = useState(false);
+  const votedData = JSON.parse(localStorage.getItem("vote-data") || "[]") as { clashId: number; clashItemId: number }[];
+  const vote = votedData.filter((item) => item.clashId === clash.id)
+
+  const [hideVote, setHideVote] = useState(vote.length > 0);
   const [clashItems, setClashItems] = useState(clash.ClashItem);
   const [clashComments, setClashComments] = useState(clash.ClashComments);
   const [comment, setComment] = useState("");
@@ -19,6 +21,8 @@ export default function Clashing({ clash }: { clash: ClashType }) {
     if (clashItems) {
       setHideVote(true);
       updateCounter(id);
+      const voteData = localStorage.getItem("vote-data")
+      localStorage.setItem("vote-data", JSON.stringify([...JSON.parse(voteData || "[]"), { clashId: clash.id, clashItemId: id }]));
       socket.emit(`clashing-${clash.id}`, {
         clashId: clash.id,
         clashItemId: id,
@@ -77,14 +81,14 @@ export default function Clashing({ clash }: { clash: ClashType }) {
       <div className="flex flex-wrap lg:flex-nowrap justify-between items-center">
         {clashItems &&
           clashItems.length > 0 &&
-          clashItems.map((item, index) => {
+          clashItems.map((item: ClashItemType, index) => {
             return (
               <Fragment key={index}>
                 {/* First Block */}
                 <div className="w-full lg:w-[500px] flex justify-center items-center flex-col">
                   <div className="w-full flex justify-center items-center  p-2 h-[300px]">
                     <Image
-                      src={getImageUrl(item.image)}
+                      src={item.image}
                       width={500}
                       height={500}
                       alt="preview-1"
@@ -92,12 +96,19 @@ export default function Clashing({ clash }: { clash: ClashType }) {
                     />
                   </div>
                   {hideVote ? (
+                    <>
                     <CountUp
                       start={0}
                       end={item.count}
                       duration={5}
                       className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
                     />
+                    {
+                      vote[0]?.clashItemId === item.id && (
+                        <p className="text-lg font-bold text-green-500 mt-2">You voted for this item</p>
+                      )
+                    }
+                    </>
                   ) : (
                     <Button
                       className="mt-4"

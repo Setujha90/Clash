@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { getImageUrl } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import ClashMenuBar from "./ClashMenuBar";
@@ -19,6 +18,10 @@ export default function ClashCard({
   clash: ClashType;
   token: string;
 }) {
+
+  const isExpired = new Date() > new Date((clash?.expire_at!))
+
+  console.log("ClashCard", clash);
   return (
     <Card>
       <CardHeader className="flex justify-between items-center flex-row">
@@ -28,7 +31,7 @@ export default function ClashCard({
       <CardContent className="h-[300px]">
         {clash?.image && (
           <Image
-            src={getImageUrl(clash.image)}
+            src={clash.image}
             width={500}
             height={500}
             alt={clash.title}
@@ -40,6 +43,11 @@ export default function ClashCard({
           <strong>Expire At :-</strong>{" "}
           {new Date(clash?.expire_at!).toDateString()}
         </p>
+        {
+          isExpired && (
+            <p className="text-red-500">This clash has expired.</p>
+          )
+        }
       </CardContent>
       <CardFooter className="space-x-4">
         <Link href={`/clash/items/${clash.id}`}>

@@ -1,5 +1,4 @@
 import { ConnectionOptions, DefaultJobOptions } from "bullmq";
-import IORedis from "ioredis";
 
 export const redisConnection: ConnectionOptions = {
     host: process.env.REDIS_HOST ,

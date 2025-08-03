@@ -1,7 +1,6 @@
 "use client";
 import React, { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
-import { getImageUrl } from "@/lib/utils";
 import socket from "@/lib/socket";
 import CountUp from "react-countup";
 export default function ViewClashItems({ clash }: { clash: ClashType }) {
@@ -49,7 +48,7 @@ export default function ViewClashItems({ clash }: { clash: ClashType }) {
                 <div className="w-full lg:w-[500px] flex justify-center items-center flex-col">
                   <div className="w-full flex justify-center items-center  p-2 h-[300px]">
                     <Image
-                      src={getImageUrl(item.image)}
+                      src={item.image}
                       width={500}
                       height={500}
                       alt="preview-1"

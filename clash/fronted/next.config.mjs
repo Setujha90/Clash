@@ -6,6 +6,10 @@ const nextConfig = {
         hostname: "localhost",
         protocol: "http",
       },
+      {
+        hostname: "res.cloudinary.com",
+        protocol: "https",
+      },
     ],
   },
   reactStrictMode: false,

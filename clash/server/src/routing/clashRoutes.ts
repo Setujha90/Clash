@@ -11,6 +11,7 @@ import logger from "../config/logger.js";
 import { FileArray, UploadedFile } from "express-fileupload";
 import prisma from "../config/database.js";
 import authMiddleware from "../middleware/AuthMiddleware.js";
+import { uploadImagess } from "../config/cloudinary.js";
 const router = Router();
 
 router.get("/", authMiddleware, async (req: Request, res: Response) => {
@@ -103,6 +104,7 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
   try {
     const body = req.body;
     const payload = clashSchema.parse(body);
+    let imageUrl: string | null;
 
     // * Check if file exists
     if (req.files?.image) {
@@ -111,18 +113,19 @@ router.post("/", authMiddleware, async (req: Request, res: Response) => {
       if (validMsg) {
         return res.status(422).json({ errors: { image: validMsg } });
       }
-      payload.image = uploadImage(image);
+      const path = uploadImage(image);
+      imageUrl = await uploadImagess(path);
     } else {
       return res
         .status(422)
         .json({ errors: { image: "Image field is required." } });
     }
 
-    await prisma.clash.create({
+    const clash = await prisma.clash.create({
       data: {
         title: payload.title,
-        description: payload?.description,
-        image: payload?.image,
+        description: payload.description,
+        image: imageUrl,
         user_id: req.user?.id!,
         expire_at: new Date(payload.expire_at),
       },
@@ -199,20 +202,21 @@ router.post("/items", authMiddleware, async (req: Request, res: Response) => {
 
       // * Upload images to items
       let uploadedImages: string[] = [];
-      images.map((img) => {
-        uploadedImages.push(uploadImage(img));
-      });
+      await Promise.all(images.map(async (img) => {
+        const image = await uploadImagess(uploadImage(img))
+        uploadedImages.push(image);
+      }));
 
-      uploadedImages.map(async (item) => {
-        await prisma.clashItem.create({
+      const items = await Promise.all(uploadedImages.map(async (item) => {
+        return await prisma.clashItem.create({
           data: {
             image: item,
             clash_id: Number(id),
           },
         });
-      });
+      }));
 
-      return res.json({ message: "Clash Items updated successfully!" });
+      return res.json({ message: "Clash Items updated successfully!", items});
     }
 
     return res
