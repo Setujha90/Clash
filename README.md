@@ -141,7 +141,7 @@ Before running this project, make sure you have:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/TusharVashishth/clash.git
+git clone https://github.com/Setujha90/clash.git
 cd clash
 ```
 
@@ -151,11 +151,11 @@ cd server
 npm install
 
 # Create .env file with the following variables:
-PORT=8000
+PORT=
 DATABASE_URL=postgresql://username:password@localhost:5432/clash_db
-APP_URL=http://localhost:3000
+APP_URL=
 JWT_SECRET=your_jwt_secret_key
-REDIS_URL=redis://localhost:6379
+REDIS_URL==
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=your_email@gmail.com
@@ -176,16 +176,16 @@ npm install
 
 # Create .env.local file with:
 NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=http://localhost:3000
-NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXTAUTH_URL=
+NEXT_PUBLIC_API_URL=
 
 # Start the frontend development server
 npm run dev
 ```
 
 ### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
+- **Frontend**: 
+- **Backend API**: 
 
 ## 📱 API Endpoints
 
