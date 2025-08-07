@@ -1,6 +1,7 @@
 import { Job, Queue, Worker } from "bullmq";
 import { defaultQueueConfig, redisConnection } from "../config/queue.js";
 import { sendMail } from "../config/mail.js";
+//import { createSendOtpEmail } from "../views/test.js";
 
 export const emailQueueName = "emailQueue";
 
@@ -14,6 +15,7 @@ export const handler = new Worker(
   emailQueueName,
   async (job: Job) => {
     const data = job.data;
+    //const html = createSendOtpEmail(data.otp);
     await sendMail(data.to, data.subject, data.html);
   },
     { connection: redisConnection }
