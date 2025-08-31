@@ -21,7 +21,6 @@ export default function ClashCard({
 
   const isExpired = new Date() > new Date((clash?.expire_at!))
 
-  console.log("ClashCard", clash);
   return (
     <Card>
       <CardHeader className="flex justify-between items-center flex-row">

@@ -64,7 +64,6 @@ export default function AddClash({ user }: { user: CustomUser }) {
         setOpen(false);
       }
     } catch (error) {
-      console.log("The error is ", error);
       setLoading(false);
       if (error instanceof AxiosError) {
         if (error.response?.status === 422) {
