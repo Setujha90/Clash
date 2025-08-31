@@ -4,11 +4,6 @@ import { commentQueue, commentQueueName } from "./jobs/CommentQueue.js";
 
 export function setupSocket(io: Server) {
   io.on("connection", (socket) => {
-    console.log("A user connected:", socket.id);
-
-    socket.on("disconnect", () => {
-      console.log("A user disconnected:", socket.id);
-    });
 
     // * Listen every emit
     socket.onAny(async (eventName: string, data: any) => {
@@ -18,7 +13,6 @@ export function setupSocket(io: Server) {
       } else if (eventName.startsWith("clashing_comment")) {
         await commentQueue.add(commentQueueName, data);
         socket.broadcast.emit(`clashing_comment-${data?.id}`, data);
-        console.log("The data is", data);
       }
     });
   });

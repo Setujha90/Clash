@@ -186,7 +186,6 @@ router.post("/register", authLimiter, async (req: Request, res: Response) => {
     });
     return res.json({ message: "User created successfully!" });
   } catch (error) {
-    console.log("The errir is ", error);
     if (error instanceof ZodError) {
       const errors = formatError(error);
       res.status(422).json({ message: "Invalid data", errors });

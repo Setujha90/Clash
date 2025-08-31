@@ -80,7 +80,7 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
         where: { id: Number(id) },
       });
       if (clash?.image) removeImage(clash?.image);
-      payload.image = uploadImage(image);
+      payload.image = await uploadImagess(uploadImage(image));
     }
     await prisma.clash.update({
       data: payload,

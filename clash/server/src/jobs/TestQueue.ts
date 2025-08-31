@@ -10,5 +10,4 @@ export const testQueue = new Queue(testQueueName ,{
 
 // * Workers
 export const handler = new Worker(testQueueName ,async(job:Job) => {
-console.log("The test queue data is" ,job?.data)
 } ,{connection:redisConnection})

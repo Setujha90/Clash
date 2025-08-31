@@ -11,15 +11,11 @@
     export async function uploadImagess(filePath: string): Promise<any> {
     try {
         const result = await cloudinary.uploader.upload(filePath);
-        console.log('Upload successful:', result);
-
-        await fs.unlink(filePath);
-        console.log('Local file deleted successfully.');
-        
         return result.secure_url;
     } catch (error) {
-        console.error('Upload failed:', error);
         throw error;
+    } finally {
+        await fs.unlink(filePath);
     }
-    }
+}
 
