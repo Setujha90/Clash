@@ -25,6 +25,10 @@ setupSocket(io);
 // *middleware
 app.use(cors());
 app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
+
 // app.use(
 //   ExpressFileUpoad({
 //     useTempFiles: true,
@@ -51,8 +55,5 @@ import routes from "./routing/index.js";
 import { checkDateHourDifference } from "./helper.js";
 import { setupSocket } from "./socket.js";
 app.use("/", routes);
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static("public"));
 
 server.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
