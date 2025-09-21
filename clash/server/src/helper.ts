@@ -45,7 +45,7 @@ export const removeImage = (imageName: string) => {
 export const uploadImage = (image: UploadedFile) => {
   const imgExt = image?.name.split(".");
   const imageName = generateRandomNum() + "." + imgExt[1];
-  const uploadPath = "/public/images/" + imageName;
+  const uploadPath = process.cwd() + "/public/images/" + imageName;
   image.mv(uploadPath, (err) => {
     if (err) throw err;
   });

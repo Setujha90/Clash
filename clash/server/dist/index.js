@@ -2,7 +2,6 @@ import express from "express";
 import "dotenv/config";
 import cors from "cors";
 import helmet from "helmet";
-import ExpressFileUpoad from "express-fileupload";
 import { createServer } from "http";
 const PORT = process.env.PORT || 7000;
 import * as path from "path";
@@ -21,13 +20,12 @@ setupSocket(io);
 // *middleware
 app.use(cors());
 app.use(helmet());
-app.use(ExpressFileUpoad({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static("public"));
+// app.use(
+//   ExpressFileUpoad({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp/",
+//   })
+// );
 // * Set View engine
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "./views"));
@@ -42,4 +40,7 @@ import routes from "./routing/index.js";
 import { checkDateHourDifference } from "./helper.js";
 import { setupSocket } from "./socket.js";
 app.use("/", routes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("public"));
 server.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
